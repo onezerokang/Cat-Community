@@ -1,17 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Delete,
-  HttpException,
-  HttpStatus,
-  Param,
-  ParseIntPipe,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
-import { PositiveIntPipe } from 'src/common/pipes/positiveInt.pipe';
 import { CatsService } from './cats.service';
 
 @Controller('cats')
@@ -20,29 +8,27 @@ export class CatsController {
   constructor(private readonly catsService: CatsService) {}
 
   @Get()
-  getAllCat() {
-    // throw new HttpException('에러 발생!', HttpStatus.FORBIDDEN);
-    return { cats: 'get all cat api' };
-  }
-
-  @Get(':id')
-  getOneCat(@Param('id', ParseIntPipe, PositiveIntPipe) catid) {
-    return 'one cat';
+  getCurrentCat() {
+    return 'current cat';
   }
 
   @Post()
-  createCat() {
-    // throw new HttpException({ success: false, message: 'Api is broken' }, 401);
-    return 'create cat';
+  async signUp() {
+    return 'signup';
   }
 
-  @Patch(':id')
-  updateCat() {
-    return 'updateCat';
+  @Post('login')
+  login() {
+    return 'login';
   }
 
-  @Delete(':id')
-  deleteCat() {
-    return 'delete cat';
+  @Post('logout')
+  logout() {
+    return 'logout';
+  }
+
+  @Post('/upload/cats')
+  uploadCatImg() {
+    return 'upload Img';
   }
 }
