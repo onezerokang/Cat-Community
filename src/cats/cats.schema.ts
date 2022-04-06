@@ -26,6 +26,16 @@ export class Cat extends Document {
   @Prop()
   @IsString()
   imgUrl: string;
+
+  readonly readOnlyData: { id: string; email: string; name: string };
 }
 // 클래스를 schema로 만들어준다. CatSchema가 실제 스키마
 export const CatSchema = SchemaFactory.createForClass(Cat);
+
+CatSchema.virtual('readOnlyData').get(function (this: Cat) {
+  return {
+    id: this.id,
+    email: this.email,
+    name: this.name,
+  };
+});
