@@ -3,7 +3,8 @@ import {
   Controller,
   Get,
   Post,
-  Req,
+  UploadedFile,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -17,6 +18,8 @@ import { ReadOnlyDto } from './dto/cat.dto';
 import { CatRequestDto } from './dto/cats.request.dto';
 import { CurrentUser } from 'src/common/decorators/user.decorator';
 import { Cat } from './cats.schema';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/common/utils/multer.options';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -55,8 +58,14 @@ export class CatsController {
   }
 
   @ApiOperation({ summary: '고양이 사진 업로드' })
-  @Post('/upload/cats')
-  uploadCatImg() {
-    return 'upload Img';
+  @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
+  @UseGuards(JwtAuthGuard)
+  @Post('upload')
+  uploadCatImg(
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @CurrentUser() cat: Cat,
+  ) {
+    // return { image: `http://localhost:8000/media/cats/${files[0].filename}` };
+    return this.catsService.uploadImg(cat, files);
   }
 }
