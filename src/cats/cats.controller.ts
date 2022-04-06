@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AuthService } from 'src/auth/auth.service';
+import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { CatsService } from './cats.service';
 import { ReadOnlyDto } from './dto/cat.dto';
@@ -8,7 +10,10 @@ import { CatRequestDto } from './dto/cats.request.dto';
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {}
+  constructor(
+    private readonly catsService: CatsService,
+    private readonly authService: AuthService,
+  ) {}
 
   @ApiOperation({ summary: '현재 로그인한 고양이 가져오기' })
   @Get()
@@ -33,8 +38,8 @@ export class CatsController {
 
   @ApiOperation({ summary: '로그인' })
   @Post('login')
-  login() {
-    return 'login';
+  login(@Body() body: LoginRequestDto) {
+    return this.authService.jwtLogin(body);
   }
 
   @ApiOperation({ summary: '로그아웃' })
