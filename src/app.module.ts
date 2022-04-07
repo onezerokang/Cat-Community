@@ -12,7 +12,7 @@ import * as mongoose from 'mongoose';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URI),
+    MongooseModule.forRoot(process.env.MONGODB_URI, { useCreateIndex: true }),
     CatsModule,
     AuthModule,
     CommentsModule,
